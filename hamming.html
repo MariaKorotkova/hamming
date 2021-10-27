@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Hamming code</title>
+		<script>
+			function code(){
+				let message = document.getElementById('inputData').value;
+				let inputDigits = message.split('')
+				for (let i = 0; i < inputDigits.length; i++)
+					inputDigits[i] = inputDigits[i] * 1;//преобразование в числа
+				
+				inputDigits.push((inputDigits[0] + inputDigits[2] + inputDigits[3]) % 2);
+				inputDigits.push((inputDigits[0] + inputDigits[1] + inputDigits[3]) % 2);
+				inputDigits.push((inputDigits[1] + inputDigits[2] + inputDigits[3]) % 2);
+				document.getElementById('codeData').value = inputDigits.join('');
+			}
+			function decode(){
+				let mass = document.getElementById('codeData').value;
+				let decodeDigits = mass.split('')
+				let arr = [];
+				for (let i = 0; i < decodeDigits.length; i++){
+					decodeDigits[i] = decodeDigits[i] * 1;
+					arr[i] = decodeDigits[i];
+				}
+				let a1 = ((decodeDigits[0] + decodeDigits[2] + decodeDigits[3] + decodeDigits[4]) % 2);
+				let a2 = ((decodeDigits[0] + decodeDigits[1] + decodeDigits[3] + decodeDigits[5]) % 2);
+				let a3 = ((decodeDigits[1] + decodeDigits[2] + decodeDigits[3] + decodeDigits[6]) % 2);
+				
+				if (a1) {
+                if (!(a2) && a1)
+                    decodeDigits[0] = 1 - decodeDigits[0];
+                else if (!(a3) && a2)
+                    decodeDigits[2] = 1 - decodeDigits[2];
+                else
+                    decodeDigits[4] = 1 - decodeDigits[4];
+				} 
+				
+				else if (a2) {
+                if (!(a3) && a1)
+                    decodeDigits[0] = 1 - decodeDigits[0];
+                else if (!(a1) && a3)
+                    decodeDigits[1] = 1 - decodeDigits[1];
+                else
+                    decodeDigits[5] = 1 - decodeDigits[5];
+				} 
+				
+				else if (a3) {
+                if (!(a2) && a1)
+                    decodeDigits[2] = 1 - decodeDigits[2];
+                else if (!(a1) && a2)
+                    decodeDigits[1] = 1 - decodeDigits[1];
+                else
+                    decodeDigits[6] = 1 - decodeDigits[6];
+				} 
+				
+				else
+					alert("no errors");
+				for (let i = 0; i < decodeDigits.length; i++) {
+					if (decodeDigits[i] != arr[i]) {
+						i++;
+						alert("error in " + i);
+						break
+					}
+				}
+				document.getElementById('decodeData').value = decodeDigits.join('');
+			}
+		</script>
+	</head>
+	<body>
+		<p><input type='text' id='inputData'/> input data</p>
+		<p><input type='button' onclick = 'code()' value='Code'/></p>
+		<p><input type='text' id='codeData' /> coded data</p>
+		<p><input type='button' onclick = 'decode()' value='Decode'/></p>
+		<p><input type='text' id='decodeData' /> decoded data</p>
+	</body>
+</html>		
